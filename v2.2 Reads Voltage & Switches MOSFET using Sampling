@@ -1,0 +1,50 @@
+//v2.2 fixed accurate readings using sampling
+//Added comments
+
+#define pwmMax 255
+int pwmPin = 6;
+float solarVoltage = 0.0;
+float batteryVoltage = 0.0;
+
+void setup()
+{
+    Serial.begin(9600); //start serial monitor
+    pinMode(pwmPin,OUTPUT); //set pin 6 to an output
+    TCCR0B = TCCR0B & 0b11111000 | 0x05 ; // change the pwm frequency to 61Hz - prescaling 1024 
+}
+
+void loop()
+{
+  int sampleCount = 0;
+  while (sampleCount < 50) 
+  {
+    solarVoltage += analogRead(A3);
+    batteryVoltage += analogRead(A2);
+    sampleCount++;
+    //delay(5);
+  }
+    
+  //read the voltage from the two voltage dividers, for solar and battery voltages
+  //Divide by 50 samples
+  //Multiply by 5V 
+  //Divide by 1024 ADC values
+  //Multiply by division factor R1 / R2 ... R1 = 10k , R2 = 1k
+  solarVoltage = (((float)solarVoltage / 50) * 5.0) / 1024.0 * 10;
+  batteryVoltage = (((float)batteryVoltage / 50) * 5.0) / 1024.0 * 10;
+
+  //Print to serial voltage information
+  Serial.print("Battery: ");
+  Serial.print(batteryVoltage);
+  Serial.println ("V");
+  Serial.print("Solar Panel: ");
+  Serial.print(solarVoltage); 
+  Serial.println ("V");
+
+  //pwm used to control the BJT which drives the MOSFET for switching the solar input
+  analogWrite(pwmPin, pwmMax * 0.3); //50% duty cycle
+  delay(50);  
+  analogWrite(pwmPin, pwmMax * 0.6); //50% duty cycle
+  delay(50);  
+  analogWrite(pwmPin, pwmMax * 0.9); //50% duty cycle
+  delay(50);
+}
