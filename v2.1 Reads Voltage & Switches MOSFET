@@ -1,4 +1,4 @@
-#v2.1 Reads Voltage & Switches MOSFET
+//v2.1 Reads Voltage & Switches MOSFET
 
 #define pwmMax 255
 int pwmPin = 6;
