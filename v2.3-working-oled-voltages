@@ -1,4 +1,11 @@
-//working OLED displays voltages
+/*
+ * v2.3 - working OLED displays voltages
+ * TODO
+ * do charging algorithm
+ * get charging leds working
+ * power arduino nano using battery - add 7805 voltage regulator
+ * add in 5A diode instead of 1A
+ */
 
 #include <Wire.h>
 #include <Adafruit_GFX.h>
@@ -7,7 +14,6 @@
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
 
-double voltage = 6;
 #define pwmMax 255
 int pwmPin = 6;
 float solarVoltage = 0.0;
