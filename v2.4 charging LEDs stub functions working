@@ -1,0 +1,104 @@
+/*
+ * v2.4 - charging LEDs stub functions working
+ * TODO
+ * do charging algorithm 
+ * power arduino nano using battery - add 7805 voltage regulator
+ */
+
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+#define SCREEN_WIDTH 128 // OLED display width, in pixels
+#define SCREEN_HEIGHT 64 // OLED display height, in pixels
+
+#define pwmMax 255
+#define chargingLED 7
+#define chargedLED 8
+
+int pwmPin = 6;
+float solarVoltage = 0.0;
+float batteryVoltage = 0.0;
+
+void charged_LED();
+void charging_LED();
+
+// Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(chargingLED, OUTPUT);
+  pinMode(chargedLED, OUTPUT);
+  
+  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) 
+  { // Address 0x3D for 128x64
+    Serial.println(F("SSD1306 allocation failed"));
+    //for(;;);
+  }
+  delay(2000);
+  
+  pinMode(pwmPin,OUTPUT); //set pin 6 to an output
+  TCCR0B = TCCR0B & 0b11111000 | 0x05 ; // change the pwm frequency to 61Hz - prescaling 1024 
+}
+
+void loop() 
+{
+  charged_LED();
+  charging_LED();
+  
+  int sampleCount = 0;
+  while (sampleCount < 50) 
+  {
+    solarVoltage += analogRead(A3);
+    batteryVoltage += analogRead(A2);
+    sampleCount++;
+    //delay(5);
+  }
+    
+  /*
+   * read the voltage from the two voltage dividers, for solar and battery voltages
+   * Divide by 50 samples
+   * Multiply by 5V 
+   * Divide by 1024 ADC values
+   * Multiply by division factor R1 / R2 ... R1 = 10k , R2 = 1k
+  */
+  solarVoltage = (((float)solarVoltage / 50) * 5.0) / 1024.0 * 10;
+  batteryVoltage = (((float)batteryVoltage / 50) * 5.0) / 1024.0 * 10;
+  
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 10);
+  display.print("Battery: ");
+  display.print(batteryVoltage);
+  display.println("V");
+  display.println("-------");
+  display.print("Solar Panel: ");
+  display.print(solarVoltage);
+  display.println("V");
+  display.display();
+  delay(100);
+  display.clearDisplay();
+
+  //pwm used to control the BJT which drives the MOSFET for switching the solar input
+  analogWrite(pwmPin, pwmMax * 0.3); //50% duty cycle
+  delay(50);  
+  analogWrite(pwmPin, pwmMax * 0.6); //50% duty cycle
+  delay(50);  
+  analogWrite(pwmPin, pwmMax * 0.9); //50% duty cycle
+  delay(50);
+}
+
+void charged_LED()
+{
+  digitalWrite(chargedLED, HIGH);
+  delay(100);
+  digitalWrite(chargedLED, LOW);
+}
+
+void charging_LED()
+{
+  digitalWrite(chargingLED, HIGH);
+  delay(100);
+  digitalWrite(chargingLED, LOW);
+}
