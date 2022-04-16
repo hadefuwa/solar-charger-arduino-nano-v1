@@ -124,8 +124,8 @@ void readVoltages()
    * Divide by 1024 ADC values
    * Multiply by division factor R1 / R2 ... R1 = 10k , R2 = 1k
   */
-  solarVoltage = (((float)solarVoltage / 50) * 5.0) / 1024.0 * 10;
-  batteryVoltage = (((float)batteryVoltage / 50) * 5.0) / 1024.0 * 10;
+  solarVoltage = (((float)solarVoltage / 50) * 5.0) / 1024.0 * 9;
+  batteryVoltage = (((float)batteryVoltage / 50) * 5.0) / 1024.0 * 9;
 }
 
 void charged_LED()
