@@ -7,6 +7,8 @@
  * 
  * TODO:
  * - run charging tests based on bulk charging
+ * - turn off oled during charging auto or manual toggle button
+ * - check pwm on oscilliscope to ensure its working as expected
  * - create a detailed schematic & a wiring diagram
  * - design PCB is charging is successful
  */
@@ -87,24 +89,26 @@ void pwmAlgorithm()
     analogWrite(pwmPin, pwmMax * 0.5); //50% duty cycle
     display.println("-------");
     display.println("Float Stage");
+    delay(1000);
   }
   else if (batteryVoltage > (batteryMaxV*0.9)) //Absorption Stage 90-95% Charged
   {
     analogWrite(pwmPin, pwmMax * 0.8); //80% duty cycle 
     display.println("-------");
     display.println("Absorption Stage");
+    delay(1000);
   }
   else if (batteryVoltage < (batteryMaxV*0.9)) //Bulk Stage Below 90% Charged
   {
     analogWrite(pwmPin, pwmMax *0.95); //95% duty cycle
     display.println("-------");
     display.println("Bulk Stage");
+    delay(1000);
   } 
 }
 
 void oledDisplay()
 {
-  
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.dim(true);
