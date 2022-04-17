@@ -6,7 +6,7 @@
  * https://electronics.stackexchange.com/questions/8744/voltage-input-for-charging-nimh-batteries
  * 
  * TODO:
- * - run charging tests on this circuit
+ * - run charging tests based on bulk charging
  * - create a detailed schematic & a wiring diagram
  * - design PCB is charging is successful
  */
@@ -37,7 +37,7 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 void setup() 
 {
   setupFunction();
-  oledDisplay();
+  display.clearDisplay(); 
 }
 
 void loop() 
@@ -50,16 +50,14 @@ void loop()
 
 void initialChecks()
 {
-  if (solarVoltage < (batteryMaxV*1.5) || solarVoltage < (batteryVoltage*1.5))
-  // this checks the solar is atleast 1.5x more than the battery voltage
+  if (solarVoltage < batteryVoltage)
+  // this checks the solar is atleast more than the battery voltage
   {
     display.ssd1306_command(SSD1306_DISPLAYOFF);
     analogWrite(pwmPin, 0); //Turn off Mosfet
     
-    for (int i = 0; i < 10; i++) 
+    for (int i = 0; i < 3; i++) 
     // Sleep for 8 seconds * 3 = 24 seconds
-    // Sleep for 8 seconds * 5 = 40 seconds
-    // Sleep for 8 seconds * 10 = 80 seconds
     {
       LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
     }
