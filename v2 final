@@ -56,7 +56,10 @@ void initialChecks()
     display.ssd1306_command(SSD1306_DISPLAYOFF);
     analogWrite(pwmPin, 0); //Turn off Mosfet
     
-    for (int i = 0; i < 3; i++) // Sleep for 8 seconds * 3 = 24 seconds
+    for (int i = 0; i < 10; i++) 
+    // Sleep for 8 seconds * 3 = 24 seconds
+    // Sleep for 8 seconds * 5 = 40 seconds
+    // Sleep for 8 seconds * 10 = 80 seconds
     {
       LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
     }
