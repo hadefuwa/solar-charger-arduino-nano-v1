@@ -8,7 +8,6 @@
  * TODO:
  * - run charging tests based on bulk charging
  * - turn off oled during charging auto or manual toggle button
- * - check pwm on oscilliscope to ensure its working as expected
  * - create a detailed schematic & a wiring diagram
  * - design PCB is charging is successful
  */
