@@ -37,7 +37,7 @@ void loop()
   readVoltages();
   pwmAlgorithm();
   oledDisplay();
-  //initialChecks();
+  initialChecks();
 }
 
 void initialChecks()
