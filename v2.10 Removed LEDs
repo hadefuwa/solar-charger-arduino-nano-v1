@@ -104,7 +104,7 @@ void oledDisplay()
   display.print(solarVoltage);
   display.println("V");
   display.display();
-  delay(100);
+  delay(500);
   display.clearDisplay();
 }
 
