@@ -45,7 +45,7 @@ void initialChecks()
   if (solarVoltage < batteryMaxV || solarVoltage < batteryVoltage)
   {
     display.ssd1306_command(SSD1306_DISPLAYOFF);
-    for (int i = 0; i < 5; i++) // 8 seconds * 7 = 56 seconds
+    for (int i = 0; i < 7; i++) // 8 seconds * 7 = 56 seconds
     {
       LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
     }
